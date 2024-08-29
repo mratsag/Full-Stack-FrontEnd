@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Post from "../Post/Post";
-import "./Home.scss"
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import "./Home.scss";
 
 function Home() {
     const [error, setError] = useState(null);
@@ -29,12 +32,18 @@ function Home() {
         return <div>Loading ...</div>;
     } else {
         return (
-            <div className="container">
-                Home!!!
-                {postList.map(post => (
-                    <Post key={post.id} title={post.title} text={post.text} />
-                ))}
-            </div>
+            <React.Fragment>
+                <CssBaseline />
+                <Container maxWidth="sm">
+                    <Box sx={{ bgcolor: '#cfe8fc', minHeight: '100vh' }}>
+                        <Container fixed className="container">
+                            {postList.map(post => (
+                                <Post key={post.id} title={post.title} text={post.text} />
+                            ))}
+                        </Container>
+                    </Box>
+                </Container>
+            </React.Fragment>
         );
     }
 }
