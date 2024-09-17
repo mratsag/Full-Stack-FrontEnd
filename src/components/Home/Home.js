@@ -38,7 +38,7 @@ function Home() {
                     <Box sx={{ bgcolor: '#cfe8fc', minHeight: '100vh' }}>
                         <Container fixed className="container">
                             {postList.map(post => (
-                                <Post key={post.id} title={post.title} text={post.text} />
+                                <Post userId = {post.userId} userName = {post.userName} key={post.id} title={post.title} text={post.text} />
                             ))}
                         </Container>
                     </Box>
