@@ -9,10 +9,10 @@ import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import { Link } from 'react-router-dom';
+import "./Post.scss";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -36,13 +36,13 @@ function Post({ title, text, userId, userName }) {
   };
 
   return (
-    <Card sx={{ width: '100%', maxWidth: 1000, textAlign: "left", margin : 3 }}>
+    <Card sx={{ width: '100%', maxWidth: 1000, textAlign: "left", margin: '16px auto' }}>
 
       <CardHeader
 
         avatar={
           <Link className='link' to={{ pathname: '/users/' + userId }}>
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="user-avatar">
+            <Avatar className='avatar' aria-label="user-avatar" >
               {userName.charAt(0).toUpperCase()}
             </Avatar>
           </Link>

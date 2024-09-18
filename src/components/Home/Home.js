@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Post from "../Post/Post";
+import PostForm from "../Post/PostForm";
 import "./Home.scss";
 
 function Home() {
@@ -7,7 +8,7 @@ function Home() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [postList, setPostList] = useState([]);
 
-    useEffect(() => {
+    const refreshPosts = () => {
         fetch("/posts")
             .then(res => res.json())
             .then(
@@ -20,7 +21,11 @@ function Home() {
                     setIsLoaded(true);
                     setError(error);
                 }
-            );
+            )
+    }
+
+    useEffect(() => {
+        refreshPosts();
     }, []);
 
     if (error) {
@@ -30,9 +35,20 @@ function Home() {
     } else {
         return (
             <div className="container">
-                {postList.map(post => (
-                    <Post userId={post.userId} userName={post.userName} title={post.title} text={post.text}></Post>
-                ))}
+                <div className="post-form-container">
+                    <PostForm userId={1} userName={"ddd"} refreshPosts={refreshPosts} />
+                </div>
+                <div className="post-list">
+                    {postList.map(post => (
+                        <Post
+                            key={post.id}
+                            userId={post.userId}
+                            userName={post.userName}
+                            title={post.title}
+                            text={post.text}
+                        />
+                    ))}
+                </div>
             </div>
         );
     }
