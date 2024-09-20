@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
@@ -25,15 +25,37 @@ const ExpandMore = styled((props) => {
 
 }));
 
-function Post({ title, text, userId, userName }) {
+function Post({ title, text, userId, userName, postId }) {
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [commentList, setCommentList] = useState([]);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   const handleLike = () => {
     setLiked(!liked);
   };
+
+  const refreshCommets = () => {
+    fetch("/cometns?postId=" + postId)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setCommentList(result);
+        },
+        (error) => {
+          console.log(error);
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+  useEffect(() => {
+    refreshCommets();
+  }, [commentList]);
 
   return (
     <Card sx={{ width: '100%', maxWidth: 1000, textAlign: "left", margin: '16px auto' }}>

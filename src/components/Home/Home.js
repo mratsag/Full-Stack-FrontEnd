@@ -26,7 +26,7 @@ function Home() {
 
     useEffect(() => {
         refreshPosts();
-    }, []);
+    }, [postList]);
 
     if (error) {
         return <div>Error !!!</div>;
@@ -41,7 +41,7 @@ function Home() {
                 <div className="post-list">
                     {postList.map(post => (
                         <Post
-                            key={post.id}
+                            postId={post.id}
                             userId={post.userId}
                             userName={post.userName}
                             title={post.title}
