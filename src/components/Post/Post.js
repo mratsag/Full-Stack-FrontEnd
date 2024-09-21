@@ -100,6 +100,7 @@ function Post({ title, text, userId, userName, postId }) {
   );
 }
 
+
 Post.propTypes = {
   title: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
