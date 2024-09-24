@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
@@ -13,16 +13,17 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import { Link } from 'react-router-dom';
 import "./Post.scss";
+import { Container } from "@mui/material";
+import Comment from "../Comment/Comment";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
+const ExpandMore = styled((IconButton, { expand }) => ({
   marginLeft: 'auto',
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  transition: 'transform 150ms ease-in-out',
+}))(({ theme, expand }) => ({
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
   }),
-
 }));
 
 function Post({ title, text, userId, userName, postId }) {
@@ -31,15 +32,19 @@ function Post({ title, text, userId, userName, postId }) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [commentList, setCommentList] = useState([]);
+  const isInitialMount = useRef(true);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
+    refreshCommets();
   };
+
   const handleLike = () => {
     setLiked(!liked);
   };
 
   const refreshCommets = () => {
-    fetch("/cometns?postId=" + postId)
+    fetch("/comments?postId=" + postId)
       .then(res => res.json())
       .then(
         (result) => {
@@ -51,20 +56,23 @@ function Post({ title, text, userId, userName, postId }) {
           setIsLoaded(true);
           setError(error);
         }
-      )
-  }
+      );
+  };
+
   useEffect(() => {
-    refreshCommets();
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      refreshCommets();
+    }
   }, [commentList]);
 
   return (
     <Card sx={{ width: '100%', maxWidth: 1000, textAlign: "left", margin: '16px auto' }}>
-
       <CardHeader
-
         avatar={
           <Link className='link' to={{ pathname: '/users/' + userId }}>
-            <Avatar className='avatar' aria-label="user-avatar" >
+            <Avatar className='avatar' aria-label="user-avatar">
               {userName.charAt(0).toUpperCase()}
             </Avatar>
           </Link>
@@ -77,9 +85,7 @@ function Post({ title, text, userId, userName, postId }) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton
-          onClick={handleLike}
-          aria-label="add to favorites">
+        <IconButton onClick={handleLike} aria-label="add to favorites">
           <FavoriteIcon style={liked ? { color: "red" } : null} />
         </IconButton>
         <ExpandMore
@@ -92,14 +98,19 @@ function Post({ title, text, userId, userName, postId }) {
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-
-        </CardContent>
+        <Container fixed className="container">
+          {error ? "Error loading comments" : isLoaded ? (
+            commentList.map(comment => (
+              <Comment userId={1} userName={"User"} text={comment.text}></Comment>
+            ))
+          ) : (
+            "Loading comments..."
+          )}
+        </Container>
       </Collapse>
     </Card>
   );
 }
-
 
 Post.propTypes = {
   title: PropTypes.string.isRequired,

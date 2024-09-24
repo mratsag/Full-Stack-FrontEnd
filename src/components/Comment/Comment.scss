@@ -1,0 +1,22 @@
+.comment {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.small-avatar {
+    width: 32px;
+    height: 32px;
+}
+
+.link {
+    text-decoration: none;
+    box-shadow: none;
+    color: white;
+}
+
+.input {
+    color: black;
+    background: white;
+}
